@@ -1,0 +1,38 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Becoming Ndilla Portfolio Backend",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "create-admin": "node scripts/createAdmin.js",
+    "test-email": "node scripts/testEmail.js",
+    "test-cloudinary": "node scripts/testCloudinary.js",
+    "raw-upload": "node scripts/rawUpload.js",
+    "fix-image-urls": "node scripts/fixImageUrls.js",
+    "seed": "node scripts/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.11.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.4",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.9.0",
+    "mongoose": "^9.12.2",
+    "multer": "^2.5.0",
+    "nodemailer": "^10.6.0",
+    "resend": "^6.38.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
