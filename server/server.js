@@ -14,6 +14,15 @@ import uploadRoutes from "./routes/upload.js";
 dns.setDefaultResultOrder("ipv4first");
 
 const app = express();
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "BecomingNdilla API is running successfully 🚀"
+  });
+});
+
+
 app.set("trust proxy", 1);
 
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
