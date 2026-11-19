@@ -10,12 +10,30 @@ import {
 } from "react-icons/fa6";
 import { profile } from "../../data/content";
 
-// Edit these lines (or add `instagram`, `phone` and `whatsapp` to `profile` in content.js)
-const INSTAGRAM_URL = profile.instagram || "https://instagram.com/your_username";
-const PHONE = profile.phone || "+255 700 000 000";
-const WHATSAPP = profile.whatsapp || PHONE; // use the same number unless yours differs
+// ---- Your accounts ----
+const INSTAGRAM_USERNAME = "becomingndilla";
+const INSTAGRAM_URL = `https://instagram.com/${INSTAGRAM_USERNAME}`;
+
+const WHATSAPP_LOCAL = "0613374380"; // local format, converted below
+const PHONE_LOCAL = WHATSAPP_LOCAL; // same number for calls
 
 const digits = (n) => n.replace(/[^\d]/g, "");
+
+// Converts 0613374380 -> 255613374380 (Tanzania country code)
+const toIntl = (n) => {
+  const d = digits(n);
+  if (d.startsWith("255")) return d;
+  if (d.startsWith("0")) return "255" + d.slice(1);
+  return d;
+};
+
+const WHATSAPP_INTL = toIntl(WHATSAPP_LOCAL);
+const PHONE_INTL = toIntl(PHONE_LOCAL);
+const PHONE_DISPLAY = `+${PHONE_INTL.slice(0, 3)} ${PHONE_INTL.slice(3, 6)} ${PHONE_INTL.slice(6, 9)} ${PHONE_INTL.slice(9)}`;
+
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_INTL}?text=${encodeURIComponent(
+  "Hi Ndilla, I found you through your website."
+)}`;
 
 const nav = [
   ["/about", "About"],
@@ -94,9 +112,10 @@ export default function Footer() {
           <ul className="mt-3 space-y-2 text-sm">
             <li>
               <a
-                href={`https://wa.me/${digits(WHATSAPP)}`}
+                href={WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="Chat on WhatsApp"
                 className={linkClass}
               >
                 <Tile type="whatsapp" />
@@ -105,7 +124,13 @@ export default function Footer() {
             </li>
 
             <li>
-              <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className={linkClass}>
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Follow on Instagram"
+                className={linkClass}
+              >
                 <Tile type="instagram" />
                 Instagram
               </a>
@@ -121,9 +146,9 @@ export default function Footer() {
             ))}
 
             <li>
-              <a href={`tel:+${digits(PHONE)}`} className={linkClass}>
+              <a href={`tel:+${PHONE_INTL}`} className={linkClass}>
                 <Tile type="phone" />
-                {PHONE}
+                {PHONE_DISPLAY}
               </a>
             </li>
 
