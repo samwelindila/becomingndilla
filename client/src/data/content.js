@@ -7,6 +7,7 @@ export const profile = {
   location: "Dar es Salaam, Tanzania",
   email: "samwelindila81@gmail.com",
   phone: "+255 770 374 380",
+  whatsapp: "255613374380",
   github: "https://github.com/samwelindila",
   portfolio: "https://ndilatech.netlify.app",
   // add your real links here; empty ones are hidden automatically

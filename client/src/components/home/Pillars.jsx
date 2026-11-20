@@ -1,32 +1,40 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Code2, Rocket, PenLine, ArrowUpRight } from "lucide-react";
 import SectionHeader from "../Common/SectionHeader";
 import Reveal from "../Common/Reveal";
-import { pillars } from "../../data/content";
 
-const icons = { tech: Code2, biz: Rocket, content: PenLine };
+// Pillar images stored in client/public/pillars/
+const pillars = [
+  {
+    title: "Technology",
+    icon: "tech",
+    subtitle: "Building solutions. Creating possibilities.",
+    text: "Technology is where ideas become practical solutions. I explore software development, web applications, artificial intelligence, and digital innovation to solve real-world problems. Through programming and continuous learning, I aim to build meaningful digital products and useful systems that make everyday experiences better.",
+  },
+  {
+    title: "Entrepreneurship",
+    icon: "biz",
+    subtitle: "Turning ideas into opportunities.",
+    text: "Entrepreneurship is about seeing possibilities, taking initiative, and building something valuable from the ground up. My interests include business development, startups, innovation, and investment. Through ventures such as NdillaTech and MonaSoap, I document the experience of building businesses, learning from challenges, and turning ideas into real opportunities.",
+  },
+  {
+    title: "Content Creation",
+    icon: "content",
+    subtitle: "Sharing the journey. Inspiring growth.",
+    text: "Content creation is my way of sharing experiences, ideas, lessons, and perspectives with the world. Through lifestyle content, storytelling, technology tutorials, and personal development, I document the process of learning, building, failing, and becoming better. My goal is to create content that adds value, encourages action, and inspires others to pursue their own journeys of growth.",
+  },
+];
 
-// Put these files in client/public/pillars/
-// "position" decides which part stays visible if the image is cropped
-// (e.g. "center", "left", "right", "center 30%").
 const images = {
   tech: { src: "/pillars/tech.jpg", position: "center" },
   biz: { src: "/pillars/business.jpg", position: "center" },
   content: { src: "/pillars/content.jpg", position: "center" },
 };
 
-function CardImage({ image, alt, Icon }) {
+function CardImage({ image, alt }) {
   const [failed, setFailed] = useState(false);
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-[var(--navy)] to-[var(--accent)]">
-      {/* Placeholder icon, only visible if the image is missing */}
-      <Icon
-        size={44}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white/25"
-      />
-
       {!failed && (
         <img
           src={image.src}
@@ -34,7 +42,7 @@ function CardImage({ image, alt, Icon }) {
           loading="lazy"
           onError={() => setFailed(true)}
           style={{ objectPosition: image.position }}
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
       )}
     </div>
@@ -43,53 +51,51 @@ function CardImage({ image, alt, Icon }) {
 
 export default function Pillars() {
   return (
-    <section className="section section-soft !py-8 md:!py-12">
+    <section className="section section-soft !py-10 md:!py-16">
       <div className="container">
-        {/* Same width wrapper as the cards, so the left edges line up */}
         <div className="mx-auto max-w-5xl">
           <SectionHeader
             label="Three pillars"
             title="One person, three connected identities"
-            text="Everything on this site grows from these three areas."
+            text="I believe growth happens when creativity, innovation, and ambition come together. My journey is built around three connected pillars that represent who I am, what I do, and the impact I want to create."
           />
         </div>
 
-        <div className="mx-auto mt-5 grid max-w-5xl gap-4 md:grid-cols-3 lg:gap-5">
+        <div className="mx-auto mt-8 grid max-w-5xl items-stretch gap-5 md:grid-cols-3">
           {pillars.map((p, i) => {
-            const Icon = icons[p.icon];
-            const image = p.image
-              ? { src: p.image, position: p.imagePosition || "center" }
-              : images[p.icon];
+            const image = images[p.icon];
 
             return (
               <Reveal key={p.title} delay={i * 0.08}>
-                <Link
-                  to={p.to}
-                  aria-label={p.cta}
-                  className="card group block h-[340px] overflow-hidden sm:h-[360px]"
-                >
-                  {/* Fixed card height split 70% image / 30% description */}
-                  <div className="grid h-full grid-rows-[7fr_3fr]">
-                    <CardImage image={image} alt={p.title} Icon={Icon} />
-
-                    <div className="min-h-0 overflow-hidden border-t border-[var(--border)] px-4 py-3">
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-base leading-snug">{p.title}</h3>
-                        <ArrowUpRight
-                          size={16}
-                          className="shrink-0 text-[var(--accent)] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                        />
-                      </div>
-                      <p className="mt-1 line-clamp-3 text-xs leading-snug">
-                        {p.text}
-                      </p>
-                    </div>
+                <article className="group h-full overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  {/* Image */}
+                  <div className="h-56 overflow-hidden sm:h-64">
+                    <CardImage image={image} alt={p.title} />
                   </div>
-                </Link>
+
+                  {/* Content */}
+                  <div className="p-5 sm:p-6">
+                    <div className="mb-3 h-1 w-10 rounded-full bg-[var(--accent)]" />
+
+                    <h3 className="text-xl font-bold text-[var(--navy)]">
+                      {p.title}
+                    </h3>
+
+                    <p className="mt-2 text-sm font-semibold leading-relaxed text-[var(--accent)]">
+                      {p.subtitle}
+                    </p>
+
+                    <p className="mt-3 text-sm leading-7 text-[var(--text-muted)]">
+                      {p.text}
+                    </p>
+                  </div>
+                </article>
               </Reveal>
             );
           })}
         </div>
+
+        
       </div>
     </section>
   );

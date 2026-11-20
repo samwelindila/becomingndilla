@@ -1,7 +1,9 @@
-
 import { Router } from "express";
 import multer from "multer";
-import cloudinary, { cloudinaryReady } from "../config/cloudinary.js";
+import cloudinary, {
+  cloudinaryReady,
+  missingCloudinaryVars,
+} from "../config/cloudinary.js";
 import { protect } from "../middleware/auth.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
@@ -22,15 +24,11 @@ const optimize = process.env.CLOUDINARY_OPTIMIZE === "true";
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: {
-    fileSize: 5 * 1024 * 1024,
-  },
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /^image\/(jpe?g|png|webp|gif|avif)$/i;
 
-    if (allowedTypes.test(file.mimetype)) {
-      return cb(null, true);
-    }
+    if (allowedTypes.test(file.mimetype)) return cb(null, true);
 
     return cb(
       new Error("Only JPG, JPEG, PNG, WEBP, GIF and AVIF images are allowed.")
@@ -47,16 +45,19 @@ const uploadBuffer = (buffer, folder) =>
       },
       (error, result) => {
         if (error) return reject(error);
-
         if (!result) {
           return reject(new Error("Cloudinary returned no upload result."));
         }
-
         resolve(result);
       }
     );
 
     stream.end(buffer);
+  });
+
+const notConfigured = (res) =>
+  res.status(500).json({
+    message: `Cloudinary is not configured. Missing: ${missingCloudinaryVars().join(", ")}`,
   });
 
 // POST /api/upload?folder=projects
@@ -65,11 +66,7 @@ router.post(
   protect,
   upload.single("image"),
   asyncHandler(async (req, res) => {
-    if (!cloudinaryReady()) {
-      return res.status(500).json({
-        message: "Cloudinary is not configured. Check server/.env.",
-      });
-    }
+    if (!cloudinaryReady()) return notConfigured(res);
 
     if (!req.file) {
       return res.status(400).json({
@@ -85,10 +82,7 @@ router.post(
       const result = await uploadBuffer(req.file.buffer, folder);
 
       const imageUrl = optimize
-        ? result.secure_url.replace(
-            "/upload/",
-            "/upload/f_auto,q_auto/"
-          )
+        ? result.secure_url.replace("/upload/", "/upload/f_auto,q_auto/")
         : result.secure_url;
 
       return res.status(201).json({
@@ -122,11 +116,7 @@ router.delete(
   "/",
   protect,
   asyncHandler(async (req, res) => {
-    if (!cloudinaryReady()) {
-      return res.status(500).json({
-        message: "Cloudinary is not configured.",
-      });
-    }
+    if (!cloudinaryReady()) return notConfigured(res);
 
     const { publicId } = req.body;
 
@@ -167,9 +157,7 @@ router.use((err, req, res, next) => {
   }
 
   if (err.message?.includes("Only JPG")) {
-    return res.status(400).json({
-      message: err.message,
-    });
+    return res.status(400).json({ message: err.message });
   }
 
   next(err);

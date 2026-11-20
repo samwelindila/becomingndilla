@@ -1,14 +1,22 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
+import ComingSoon from "./pages/ComingSoon.jsx";
+import "./index.css";
 
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App.jsx'
-import './index.css'
+// Set to false when you are ready to launch
+const COMING_SOON = true;
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-)
+// Visit yoursite.com/?preview=1 once to view the real site (remembered for that browser tab)
+const params = new URLSearchParams(window.location.search);
+if (params.get("preview") === "1") sessionStorage.setItem("preview", "1");
+const isPreview = sessionStorage.getItem("preview") === "1";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+  </StrictMode>
+);
