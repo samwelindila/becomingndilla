@@ -13,10 +13,10 @@ const params = new URLSearchParams(window.location.search);
 if (params.get("preview") === "1") sessionStorage.setItem("preview", "1");
 const isPreview = sessionStorage.getItem("preview") === "1";
 
+const showComingSoon = COMING_SOON && !isPreview;
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+    <BrowserRouter>{showComingSoon ? <ComingSoon /> : <App />}</BrowserRouter>
   </StrictMode>
 );
