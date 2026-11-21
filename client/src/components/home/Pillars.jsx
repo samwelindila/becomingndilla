@@ -24,6 +24,8 @@ const pillars = [
   },
 ];
 
+// "position" decides which part stays visible when the image is cropped
+// (e.g. "center", "left", "right", "center 30%").
 const images = {
   tech: { src: "/pillars/tech.jpg", position: "center" },
   biz: { src: "/pillars/business.jpg", position: "center" },
@@ -34,7 +36,7 @@ function CardImage({ image, alt }) {
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-br from-[var(--navy)] to-[var(--accent)]">
+    <div className="absolute inset-0 overflow-hidden bg-gradient-to-br from-[var(--navy)] to-[var(--accent)]">
       {!failed && (
         <img
           src={image.src}
@@ -67,14 +69,14 @@ export default function Pillars() {
 
             return (
               <Reveal key={p.title} delay={i * 0.08}>
-                <article className="group h-full overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                  {/* Image */}
-                  <div className="h-56 overflow-hidden sm:h-64">
+                <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--border)] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                  {/* Image: portrait on every screen size */}
+                  <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden">
                     <CardImage image={image} alt={p.title} />
                   </div>
 
                   {/* Content */}
-                  <div className="p-5 sm:p-6">
+                  <div className="flex-1 p-5 sm:p-6">
                     <div className="mb-3 h-1 w-10 rounded-full bg-[var(--accent)]" />
 
                     <h3 className="text-xl font-bold text-[var(--navy)]">
@@ -94,8 +96,6 @@ export default function Pillars() {
             );
           })}
         </div>
-
-        
       </div>
     </section>
   );
